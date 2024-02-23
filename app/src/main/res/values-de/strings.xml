@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WelcheNote</string>
+    <string name="training">Übung</string>
+    <string name="detector_beta">Detektor(Beta)</string>
+    <string name="stop">Stoppen</string>
+    <string name="record">Aufnehmen</string>
+    <string name="doo">C</string>
+    <string name="re">D</string>
+    <string name="mi">E</string>
+    <string name="fa">F</string>
+    <string name="sol">G</string>
+    <string name="la">A</string>
+    <string name="si">B</string>
+</resources>

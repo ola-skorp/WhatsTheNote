@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">КакаяНота</string>
+    <string name="training">Тренировка</string>
+    <string name="detector_beta">Детектор(Бета)</string>
+    <string name="stop">Остановить</string>
+    <string name="record">Записывать</string>
+    <string name="doo">До</string>
+    <string name="re">Ре</string>
+    <string name="mi">Ми</string>
+    <string name="fa">Фа</string>
+    <string name="sol">Соль</string>
+    <string name="la">Ля</string>
+    <string name="si">Си</string>
+</resources>
