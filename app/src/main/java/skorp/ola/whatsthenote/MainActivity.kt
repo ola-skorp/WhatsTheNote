@@ -22,12 +22,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import skorp.ola.whatsthenote.entities.NoteEntity
+import skorp.ola.whatsthenote.models.NoteModel
 import skorp.ola.whatsthenote.ui.NoteDetectorScreen
 import skorp.ola.whatsthenote.ui.TrainerScreen
 import skorp.ola.whatsthenote.ui.theme.WhatsTheNoteTheme
-import skorp.ola.whatsthenote.usecases.INoteAnalyseUseCase
-import skorp.ola.whatsthenote.usecases.IRecordUseCase
+import skorp.ola.whatsthenote.entitylayer.IFrequencyAnalyser
+import skorp.ola.whatsthenote.platform.IRecorder
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,10 +35,10 @@ class MainActivity : ComponentActivity() {
     private var recordJob: Job? = null
 
     @Inject
-    lateinit var recorder: IRecordUseCase
+    lateinit var recorder: IRecorder
 
     @Inject
-    lateinit var noteAnalyseUseCase: INoteAnalyseUseCase
+    lateinit var noteAnalyseUseCase: IFrequencyAnalyser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
         val randomNote = remember { mutableStateOf(noteAnalyseUseCase.getRandomNote()) }
         val isRecording = remember { mutableStateOf(false) }
         val state = rememberLazyListState()
-        val notes = remember { mutableStateOf<List<NoteEntity>>(emptyList()) }
+        val notes = remember { mutableStateOf<List<NoteModel>>(emptyList()) }
         val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(), onResult = {
             if (it) record(isRecording, notes, state)
         })
@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun record(isRecording: MutableState<Boolean>, notes: MutableState<List<NoteEntity>>, state: LazyListState) {
+    private fun record(isRecording: MutableState<Boolean>, notes: MutableState<List<NoteModel>>, state: LazyListState) {
         isRecording.value = true
         recordJob = lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun TabsScreen(wrongNotes: Set<Int>, randomNote: NoteEntity, onNewNote: () -> Unit, onWrongNote: (Int) -> Unit, state: LazyListState, isRecording: Boolean, notes: List<NoteEntity>, record: () -> Unit, stop: () -> Unit) {
+    private fun TabsScreen(wrongNotes: Set<Int>, randomNote: NoteModel, onNewNote: () -> Unit, onWrongNote: (Int) -> Unit, state: LazyListState, isRecording: Boolean, notes: List<NoteModel>, record: () -> Unit, stop: () -> Unit) {
         val selectedTabIndex = remember { mutableIntStateOf(0) }
         val tabs = listOf(stringResource(id = R.string.training), stringResource(id = R.string.detector_beta))
         Column {

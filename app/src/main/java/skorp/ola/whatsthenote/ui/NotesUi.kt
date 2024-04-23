@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import skorp.ola.whatsthenote.entities.NoteEntity
+import skorp.ola.whatsthenote.models.NoteModel
 import kotlin.math.absoluteValue
 import skorp.ola.whatsthenote.R
 import skorp.ola.whatsthenote.ui.theme.Purple500
@@ -33,7 +33,7 @@ private const val LINE_SIZE = 2
 private const val NOTE_PADDING = 4
 
 @Composable
-fun TrainerScreen(wrongNotes: Set<Int>, randomNote: NoteEntity, onNewNote: () -> Unit, onWrongNote: (Int) -> Unit) {
+fun TrainerScreen(wrongNotes: Set<Int>, randomNote: NoteModel, onNewNote: () -> Unit, onWrongNote: (Int) -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Row {
             ClefColumn(randomNote, true)
@@ -88,7 +88,7 @@ private fun Int.toNoteName() = when (this) {
 }
 
 @Composable
-fun NoteDetectorScreen(state: LazyListState, isRecording: Boolean, notes: List<NoteEntity>, record: () -> Unit, stop: () -> Unit) {
+fun NoteDetectorScreen(state: LazyListState, isRecording: Boolean, notes: List<NoteModel>, record: () -> Unit, stop: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Notes(state, notes)
         Button(
@@ -103,7 +103,7 @@ fun NoteDetectorScreen(state: LazyListState, isRecording: Boolean, notes: List<N
 }
 
 @Composable
-private fun Notes(state: LazyListState, notes: List<NoteEntity> = listOf(NoteEntity(2, 4, false, -1.0))) {
+private fun Notes(state: LazyListState, notes: List<NoteModel> = listOf(NoteModel(2, 4, false, -1.0))) {
     Row {
         ClefColumn(null, false)
         LazyRow(state = state) {
@@ -115,7 +115,7 @@ private fun Notes(state: LazyListState, notes: List<NoteEntity> = listOf(NoteEnt
 }
 
 @Composable
-private fun StaffColumnWithNote(note: NoteEntity?, dontShowUnusedStaffs: Boolean) {
+private fun StaffColumnWithNote(note: NoteModel?, dontShowUnusedStaffs: Boolean) {
     Box {
         StaffColumn(note, note.getStaff(), dontShowUnusedStaffs)
         val blackAndWhites = note.getBAndW()
@@ -126,7 +126,7 @@ private fun StaffColumnWithNote(note: NoteEntity?, dontShowUnusedStaffs: Boolean
 }
 
 @Composable
-private fun StaffColumn(note: NoteEntity?, staff: Int, dontShowUnusedStaffs: Boolean) {
+private fun StaffColumn(note: NoteModel?, staff: Int, dontShowUnusedStaffs: Boolean) {
     Column {
         Staff4(note, !dontShowUnusedStaffs || staff == 4)
         Staff3(note, !dontShowUnusedStaffs || staff == 3)
@@ -136,7 +136,7 @@ private fun StaffColumn(note: NoteEntity?, staff: Int, dontShowUnusedStaffs: Boo
 }
 
 @Composable
-private fun ClefColumn(note: NoteEntity?, dontShowUnusedStaffs: Boolean) {
+private fun ClefColumn(note: NoteModel?, dontShowUnusedStaffs: Boolean) {
     val staff = note.getStaff()
     Box {
         Row {
@@ -249,7 +249,7 @@ private fun TrebleClef() {
 private fun calculatePadding(blackAndWhites: Double, oct: Int) =
     ((blackAndWhites * NOTE_SIZE + blackAndWhites * LINE_SIZE) + oct * (NOTE_SIZE * 3.5 + LINE_SIZE * 3.5)).toInt()
 
-private fun NoteEntity?.getStaff() = when (this?.octave) {
+private fun NoteModel?.getStaff() = when (this?.octave) {
     6, 7, 8 -> 4
     5, 4 -> 3
     3, 2 -> 2
@@ -257,7 +257,7 @@ private fun NoteEntity?.getStaff() = when (this?.octave) {
     else -> 0
 }
 
-private fun NoteEntity?.getBAndW() = when (this?.note) {
+private fun NoteModel?.getBAndW() = when (this?.note) {
     3 -> 0.5
     2 -> 1.0
     1 -> 1.5
@@ -269,7 +269,7 @@ private fun NoteEntity?.getBAndW() = when (this?.note) {
 }
 
 @Composable
-private fun Staff4(note: NoteEntity?, isActive: Boolean) {
+private fun Staff4(note: NoteModel?, isActive: Boolean) {
     val la7 = note?.note == 6 && note.octave == 7
     val si7 = note?.note == 7 && note.octave == 7
     val mi8 = note?.note == 3 && note.octave == 8
@@ -289,7 +289,7 @@ private fun Staff4(note: NoteEntity?, isActive: Boolean) {
 }
 
 @Composable
-private fun Staff3(note: NoteEntity?, isActive: Boolean) {
+private fun Staff3(note: NoteModel?, isActive: Boolean) {
     val si5 = note?.note == 7 && note.octave == 5
     val la5 = note?.note == 6 && note.octave == 5
     val do4 = note?.note == 1 && note.octave == 4
@@ -302,7 +302,7 @@ private fun Staff3(note: NoteEntity?, isActive: Boolean) {
 }
 
 @Composable
-private fun Staff2(note: NoteEntity?, isActive: Boolean) {
+private fun Staff2(note: NoteModel?, isActive: Boolean) {
     val do2 = note?.note == 1 && note.octave == 2
     val re2 = note?.note == 2 && note.octave == 2
     val mi2 = note?.note == 3 && note.octave == 2
@@ -315,7 +315,7 @@ private fun Staff2(note: NoteEntity?, isActive: Boolean) {
 }
 
 @Composable
-private fun Staff1(note: NoteEntity?, isActive: Boolean) {
+private fun Staff1(note: NoteModel?, isActive: Boolean) {
     val mi0 = note?.note == 3 && note.octave == 0
     White() //си1
     Staff(isActive) // соль0 ля0 си0 до1 ре1 ми1 фа1 соль1 ля1
