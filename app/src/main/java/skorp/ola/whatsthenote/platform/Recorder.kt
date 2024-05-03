@@ -10,9 +10,9 @@ import kotlinx.coroutines.withContext
 import skorp.ola.whatsthenote.usecases.IStreamAnalyzeUseCase
 import javax.inject.Inject
 
-class Recorder @Inject constructor(private val streamAnalyzeUseCase: IStreamAnalyzeUseCase): IRecorder{
-    @SuppressLint("MissingPermission")
-    private val recorder = AudioRecord(MediaRecorder.AudioSource.MIC, RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_FLOAT, 2048)
+@SuppressLint("MissingPermission")
+class Recorder @Inject constructor(private val streamAnalyzeUseCase: IStreamAnalyzeUseCase) : IRecorder {
+    private val recorder by lazy { AudioRecord(MediaRecorder.AudioSource.MIC, RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_FLOAT, 2048) }
 
     override suspend fun record(onResult: (Int) -> Unit) {
         val fBuffer = FloatArray(SIZE)
@@ -30,7 +30,7 @@ class Recorder @Inject constructor(private val streamAnalyzeUseCase: IStreamAnal
         }
     }
 
-    companion object{
+    companion object {
         private const val SIZE = 16182
         private const val RATE = 44100
     }
